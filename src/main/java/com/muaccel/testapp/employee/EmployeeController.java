@@ -3,6 +3,7 @@ package com.muaccel.testapp.employee;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -16,7 +17,7 @@ public class EmployeeController {
     }
 
     @PostMapping("/employees")
-    Employee newEmployee(@RequestBody Employee newEmployee) {
+    Employee newEmployee(@Valid @RequestBody Employee newEmployee) {
         return employeeRepository.save(newEmployee);
     }
 
@@ -32,7 +33,7 @@ public class EmployeeController {
     }
 
     @PutMapping("/employees/{id}")
-    Employee updateEmployee(@PathVariable Long id, @RequestBody Employee newEmployee) {
+    Employee updateEmployee(@PathVariable Long id, @Valid @RequestBody Employee newEmployee) {
         return employeeRepository.findById(id).map(employee -> {
             employee.setName(newEmployee.getName());
             employee.setRole(newEmployee.getRole());
