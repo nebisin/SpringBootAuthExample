@@ -18,16 +18,12 @@ public class UserService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        return userRepository.findByEmail(email)
-                .orElseThrow(() -> new UsernameNotFoundException(String.format(USER_NOT_FOUND_MSG, email)));
+        User user = userRepository.findByEmail(email);
+
+        return new UserPrincipal(user);
     }
 
     public User signUpUser(User user) {
-        boolean isUserExist = userRepository.findByEmail(user.getEmail()).isPresent();
-
-        if(isUserExist) {
-            throw new IllegalStateException("Email is already taken!");
-        }
 
         String encodedPassword = bCryptPasswordEncoder.encode(user.getPassword());
 

@@ -1,6 +1,7 @@
 package com.muaccel.testapp.registration;
 
 import com.muaccel.testapp.user.User;
+import com.muaccel.testapp.user.UserPrincipal;
 import com.muaccel.testapp.user.UserRole;
 import com.muaccel.testapp.user.UserService;
 import lombok.AllArgsConstructor;

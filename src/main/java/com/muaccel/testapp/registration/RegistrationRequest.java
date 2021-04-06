@@ -15,6 +15,6 @@ public class RegistrationRequest {
     private final String displayName;
     private final String password;
 
-    @Email
+    @Email(message = "Invalid email address")
     private final String email;
 }
