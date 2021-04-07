@@ -1,14 +1,10 @@
 package com.muaccel.testapp.user;
 
+import com.muaccel.testapp.post.Post;
 import lombok.*;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Optional;
+import java.util.List;
 
 @Entity
 @Getter
@@ -30,9 +26,20 @@ public class User {
     private Boolean locked = false;
     private Boolean enabled = true;
 
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "author")
+    private List<Post> posts;
+
     public User(String email, String password, UserRole userRole) {
         this.email = email;
         this.password = password;
         this.userRole = userRole;
+    }
+
+    public String getPassword() {
+        return null;
+    }
+
+    public String seePassword() {
+        return password;
     }
 }
