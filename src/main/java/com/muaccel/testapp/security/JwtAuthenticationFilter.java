@@ -2,10 +2,8 @@ package com.muaccel.testapp.security;
 
 import com.auth0.jwt.JWT;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.muaccel.testapp.login.LoginRequest;
-import com.muaccel.testapp.user.User;
+import com.muaccel.testapp.registration.AuthenticationRequest;
 import com.muaccel.testapp.user.UserPrincipal;
-import lombok.AllArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -23,7 +21,7 @@ import java.util.Date;
 import static com.auth0.jwt.algorithms.Algorithm.HMAC512;
 
 public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
-    private AuthenticationManager authenticationManager;
+    private final AuthenticationManager authenticationManager;
 
 
     public JwtAuthenticationFilter(AuthenticationManager authenticationManager) {
@@ -34,9 +32,9 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
         // Grab credentials and map them to login request
-        LoginRequest credentials = null;
+        AuthenticationRequest credentials = null;
         try {
-            credentials = new ObjectMapper().readValue(request.getInputStream(), LoginRequest.class);
+            credentials = new ObjectMapper().readValue(request.getInputStream(), AuthenticationRequest.class);
         } catch (IOException e) {
             e.printStackTrace();
         }

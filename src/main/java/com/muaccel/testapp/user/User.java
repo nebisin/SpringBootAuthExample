@@ -21,7 +21,6 @@ public class User {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    private String displayName;
     private String email;
     private String password;
 
@@ -31,8 +30,7 @@ public class User {
     private Boolean locked = false;
     private Boolean enabled = true;
 
-    public User(String displayName, String email, String password, UserRole userRole) {
-        this.displayName = displayName;
+    public User(String email, String password, UserRole userRole) {
         this.email = email;
         this.password = password;
         this.userRole = userRole;

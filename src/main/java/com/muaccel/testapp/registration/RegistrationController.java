@@ -16,7 +16,7 @@ public class RegistrationController {
     private final RegistrationService registrationService;
 
     @PostMapping
-    public User register(@RequestBody @Valid RegistrationRequest request) {
+    public User register(@RequestBody @Valid AuthenticationRequest request) {
         return registrationService.register(request);
     }
 }
