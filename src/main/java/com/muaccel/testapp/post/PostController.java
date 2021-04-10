@@ -30,7 +30,7 @@ public class PostController {
     public Post createPost(@Valid @RequestBody Post newPost, HttpServletRequest request) {
         Principal userPrincipal = request.getUserPrincipal();
 
-        User author = userRepository.findByEmail(userPrincipal.getName());
+        User author = userRepository.findByEmail(userPrincipal.getName()).orElseThrow(() -> new RuntimeException("User not exist!"));
 
         newPost.setAuthor(author);
 

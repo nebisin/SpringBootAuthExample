@@ -1,5 +1,6 @@
 package com.muaccel.testapp.user;
 
+import com.muaccel.testapp.exception.NotFoundException;
 import lombok.AllArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -18,12 +19,18 @@ public class UserService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        User user = userRepository.findByEmail(email);
+        User user = userRepository.findByEmail(email).orElseThrow(() -> new NotFoundException(USER_NOT_FOUND_MSG));
 
         return new UserPrincipal(user);
     }
 
     public User signUpUser(User user) {
+
+        boolean isUserExist = userRepository.findByEmail(user.getEmail()).isPresent();
+
+        if (isUserExist) {
+            throw new RuntimeException("Email is already exist!");
+        }
 
         String encodedPassword = bCryptPasswordEncoder.encode(user.seePassword());
 

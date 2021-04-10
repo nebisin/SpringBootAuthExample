@@ -12,6 +12,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -31,24 +32,24 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
     // Trigger when we issue POST request to /login
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
-        // Grab credentials and map them to login request
-        AuthenticationRequest credentials = null;
         try {
-            credentials = new ObjectMapper().readValue(request.getInputStream(), AuthenticationRequest.class);
+            // Grab credentials and map them to login request
+
+            AuthenticationRequest authenticationRequest = new ObjectMapper().readValue(request.getInputStream(), AuthenticationRequest.class);
+
+
+            // Create login token
+            UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
+                    authenticationRequest.getUsername(),
+                    authenticationRequest.getPassword(),
+                    new ArrayList<>()
+            );
+
+            // Authenticate user
+            return authenticationManager.authenticate(authenticationToken);
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new RuntimeException(e);
         }
-
-        // Create login token
-        UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
-                credentials.getUsername(),
-                credentials.getPassword(),
-                new ArrayList<>());
-
-        // Authenticate user
-        Authentication auth = authenticationManager.authenticate(authenticationToken);
-
-        return auth;
     }
 
     @Override
@@ -64,5 +65,8 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 
         // Add token in response
         response.addHeader(JwtProperties.HEADER_STRING, JwtProperties.TOKEN_PREFIX +  token);
+
+        // response.addCookie(new Cookie(JwtProperties.HEADER_STRING, JwtProperties.TOKEN_PREFIX +  token));
+
     }
 }

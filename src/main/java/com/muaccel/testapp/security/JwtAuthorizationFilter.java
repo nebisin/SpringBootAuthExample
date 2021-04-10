@@ -1,6 +1,7 @@
 package com.muaccel.testapp.security;
 
 import com.auth0.jwt.JWT;
+import com.muaccel.testapp.exception.NotFoundException;
 import com.muaccel.testapp.user.User;
 import com.muaccel.testapp.user.UserPrincipal;
 import com.muaccel.testapp.user.UserRepository;
@@ -15,7 +16,6 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.Optional;
 
 import static com.auth0.jwt.algorithms.Algorithm.HMAC512;
 
@@ -61,7 +61,7 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
             // Search in the DB if we find the user by token subject (username)
             // If so, then grab user details and create spring auth token using username, pass, authorities/roles
             if (userName != null) {
-                User user = userRepository.findByEmail(userName);
+                User user = userRepository.findByEmail(userName).orElseThrow(() -> new NotFoundException("User not exist!"));
 
                 UserPrincipal principal = new UserPrincipal(user);
                 UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(userName, null, principal.getAuthorities());
